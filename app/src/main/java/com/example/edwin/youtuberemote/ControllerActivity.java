@@ -17,7 +17,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ControllerActivity extends AppCompatActivity {
     private String key;
@@ -25,7 +27,9 @@ public class ControllerActivity extends AppCompatActivity {
     public static final String PREFERENCES = "Preferences";
     SharedPreferences sharedPreferences;
     private boolean isPlaying = false;
+    private boolean isMuted = false;
     private ImageButton playBtn;
+    private SeekBar mVideoSeekbar;
 
     private Socket socket;
     {
@@ -113,17 +117,110 @@ public class ControllerActivity extends AppCompatActivity {
         });
 
 
-        ImageButton muteBtn = (ImageButton)findViewById(R.id.imageButton1) ;
+        ImageButton muteBtn = (ImageButton)findViewById(R.id.imageButton1);
 
         muteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!isMuted) {
                     socket.emit("mute", key);
+                    ((ImageButton) v).setImageResource(R.drawable.ic_muted);
+                    isMuted = true;
+                }
+                else{
+                    socket.emit("unMute", key);
+                    ((ImageButton) v).setImageResource(R.drawable.ic_mute);
+                    isMuted = false;
+                }
 
             }
         });
 
+        SeekBar volSeekbar = (SeekBar)findViewById(R.id.seekBar1);
 
+        volSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+                progress = progresValue;
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                setVolume(progress);
+
+            }
+
+        });
+
+        mVideoSeekbar = (SeekBar)findViewById(R.id.seekBar);
+        socket.on("vidDuration", grabVidDuration);
+
+        mVideoSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+                progress = progresValue;
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                seekTo(progress);
+
+            }
+
+        });
+
+    }
+
+    private Emitter.Listener grabVidDuration = new Emitter.Listener(){
+        @Override
+        public void call(final Object... args){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Double dur = (Double) args[0];
+                    mVideoSeekbar.setMax(dur.intValue());
+                }
+            });
+        }
+    };
+
+    private void setVolume(int vol){
+        JSONObject recAndVol = new JSONObject();
+        try{
+            recAndVol.put("vol",vol);
+            recAndVol.put("to",key);
+            socket.emit("setVolume", recAndVol);
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void seekTo(int secs){
+        //rec = recipient
+        JSONObject recAndSecs = new JSONObject();
+        try{
+            recAndSecs.put("secs",secs);
+            recAndSecs.put("to",key);
+            socket.emit("seekTo", recAndSecs);
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
     }
 
     private void startVideo(){
