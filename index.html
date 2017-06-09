@@ -80,7 +80,7 @@ $(function(){
 
 				$('#ytplayer').attr('src', res);
 
-				setTimeout(function(){ socket.emit('vidDuration', {duration:player.getDuration(), to:data.sender});  }, 2000);
+				setTimeout(function(){ socket.emit('vidDuration', {duration:player.getDuration(), to:data.sender});  }, 7000);
 	
 				
 			});
