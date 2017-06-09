@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<title>Youtube Remote</title>
+
+
+<script>
+	var tag = document.createElement('script');
+	tag.src = "https://www.youtube.com/iframe_api";
+	var firstScriptTag = document.getElementsByTagName('script')[0];
+	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+	var player;
+
+	function onYouTubeIframeAPIReady() {
+		player = new YT.Player('ytplayer', {
+			events: {
+				'onReady': onPlayerReady
+			}
+		});
+	}
+
+	function onPlayerReady() {}
+
+	
+</script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+ 
+ <script type="text/javascript">
+ 	
+$(function(){
+
+		var socket = io.connect();
+
+		socket.on('key', function(data){
+
+			$('#keyContainer').html('Enter this key in the app to see your video here (browser must be Google Chrome): '+ '<code>'+data+'</code>');
+				
+				
+			});
+
+		socket.on('play', function(data){
+				player.playVideo();
+				
+			});
+
+		socket.on('pause', function(data){
+				player.pauseVideo();
+				
+			});
+
+		socket.on('mute', function(data){
+				
+				player.mute();
+			});
+
+		socket.on('unMute', function(data){
+				
+				player.unMute();
+			});
+
+		socket.on('setVolume', function(data){
+				
+				player.setVolume(data);
+			});
+
+		socket.on('seekTo', function(data){
+				
+				player.seekTo(data, true);
+			});
+
+		socket.on('startVideo', function(data){
+				
+				var res = data.url.replace("/watch?v=", "");
+				res = "https://www.youtube.com/embed/" + res + "?loop=1&rel=0&enablejsapi=1&autoplay=1&controls=1&showinfo=0&iv_load_policy=3";
+
+				$('#ytplayer').attr('src', res);
+
+				socket.emit('vidDuration', {duration:player.getDuration(), to:data.sender});
+				
+			});
+
+
+	});
+ </script>
+
+<style type="text/css">
+html,body{background:#e1e1e8;}
+#keyContainer{text-align: center; font-weight: bold; font-size: 19px; margin-top: 5px;}
+#ytplayer{display: block; margin-left: auto; margin-right: auto;}
+	
+</style>
+
+</head>
+<body>
+<div id="keyContainer"></div> 
+<br>
+<iframe id="ytplayer" width="800" height="500" src="https://www.youtube.com/embed/HfBIMjIHZGY?loop=1&rel=0&enablejsapi=1&controls=1&showinfo=0&iv_load_policy=3" frameborder="0"  allowfullscreen></iframe>
+
+</body>
+</html>
+
+
