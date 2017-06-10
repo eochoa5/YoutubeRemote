@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +42,15 @@ public class MainActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.listView);
         mListView.setAdapter(adapter);
 
+        String content = "1. Search and choose a YouTube video." +
+                " \n2. Go to https://youtr.herokuapp.com on your computer and enter the given key in the app." +
+                " \n3. You can now control the video from your phone";
+
+        SpannableStringBuilder str = new SpannableStringBuilder(content);
+        int startPos = content.indexOf("https://youtr.herokuapp.com");
+        str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                startPos, startPos+27, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTextView.setText(str);
 
     }
 

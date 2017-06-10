@@ -2,6 +2,8 @@ package com.example.edwin.youtuberemote;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -34,7 +36,8 @@ public class ControllerActivity extends AppCompatActivity {
     private Socket socket;
     {
         try{
-            socket = IO.socket("http://192.168.1.172:3000");
+            socket = IO.socket("https://youtr.herokuapp.com");
+
         }catch(URISyntaxException e){
             throw new RuntimeException(e);
         }
@@ -118,7 +121,6 @@ public class ControllerActivity extends AppCompatActivity {
 
 
         ImageButton muteBtn = (ImageButton)findViewById(R.id.imageButton1);
-
         muteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,8 +195,10 @@ public class ControllerActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Double dur = (Double) args[0];
-                    mVideoSeekbar.setMax(dur.intValue());
+                    double durDoub = Double.parseDouble(args[0].toString());
+                    int dur = (int) durDoub;
+                    mVideoSeekbar.setEnabled(true);
+                    mVideoSeekbar.setMax(dur);
                 }
             });
         }

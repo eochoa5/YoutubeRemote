@@ -16,10 +16,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:text="1. Search and choose a YouTube video. \n2. Go to site.com and enter the given key in the app. \n3. You can now control the video from your phone"
+        android:textSize="18sp"
+        android:text=""
         android:id="@+id/textView"
-        android:textStyle="bold"
         android:lineSpacingExtra="4dp"
         android:textColor="#000000"
         android:layout_alignParentTop="true"
