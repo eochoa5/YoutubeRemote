@@ -64,7 +64,3 @@ http.listen(process.env.PORT || 3000, function(){
 });
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 4f952e97f506a891efacf449b91e23c5eca4e942
