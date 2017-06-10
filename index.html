@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+<<<<<<< HEAD
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <title>Youtube Remote</title>
 
 
+=======
+
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<title>Youtube Remote</title>
+
+>>>>>>> 4f952e97f506a891efacf449b91e23c5eca4e942
 <script>
 	var tag = document.createElement('script');
 	tag.src = "https://www.youtube.com/iframe_api";
@@ -34,7 +41,11 @@
  	
 $(function(){
 
+<<<<<<< HEAD
 		var socket = io.connect();
+=======
+		var socket = io();
+>>>>>>> 4f952e97f506a891efacf449b91e23c5eca4e942
 
 		socket.on('key', function(data){
 
@@ -80,8 +91,12 @@ $(function(){
 
 				$('#ytplayer').attr('src', res);
 
+<<<<<<< HEAD
 				setTimeout(function(){ socket.emit('vidDuration', {duration:player.getDuration(), to:data.sender});  }, 7000);
 	
+=======
+				socket.emit('vidDuration', {duration:player.getDuration(), to:data.sender});
+>>>>>>> 4f952e97f506a891efacf449b91e23c5eca4e942
 				
 			});
 
@@ -93,7 +108,10 @@ $(function(){
 html,body{background:#e1e1e8;}
 #keyContainer{text-align: center; font-weight: bold; font-size: 19px; margin-top: 5px;}
 #ytplayer{display: block; margin-left: auto; margin-right: auto;}
+<<<<<<< HEAD
 code{font-family:Georgia;}
+=======
+>>>>>>> 4f952e97f506a891efacf449b91e23c5eca4e942
 	
 </style>
 
